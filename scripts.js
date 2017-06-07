@@ -7,81 +7,64 @@ var major = [0, 4, 7];
 var minor = [0, 3, 7];
 var diminished = [0, 3, 6];
 var augmented = [0, 4, 8];
-//
-// var fretboardDictionary = {
-//
-// }
+var rootnote;
+var quality;
 
-
+resetColors();
+resetOptions();
 
 function createChord() {
-    var rootNote = $('#root').val();
-    var quality = $('#quality').val();
+    //This function takes the user selection and actually creates the spelling of a chord "Gasp! Magical..."
+    //It takes the root note, creates a chromatic scale, and then applies the formula.
+    //It then returns the spelling
     var arrayForConstruction;
+    var spelledArray = [];
+    var chordFormula;
     for (var startingNote = 0; startingNote < notesArray.length; startingNote++) {
         if (notesArray[startingNote] == rootNote) {
             arrayForConstruction = (notesArray.slice(startingNote).concat(notesArray.slice(0, startingNote + 1)));
             // console.log(arrayForConstruction);
-            console.log(arrayForConstruction);
-            arrayForConstruction = arrayForConstruction.splice(major);
-            console.log(arrayForConstruction);
-            findShape(arrayForConstruction);
         }
     }
+    switch (quality) {
+        case "major":
+            chordFormula = major;
+            break;
+        case "minor":
+            chordFormula = minor;
+            break;
+        case "augmented":
+            chordFormula = augmented;
+            break;
+        case "diminished":
+            chordFormula = diminished;
+            break;
+        default:
+            console.log("Defaulting B****!");
+            break;
+        }
+        // console.log(chordFormula);
+        for (var note = 0; note < chordFormula.length; note++) {
+            spelledArray.push(arrayForConstruction[chordFormula[note]]);
+        }
+        // console.log(spelledArray);
+    return spelledArray;
 }
 
-// function arrayForString(starting_note){
-//     var newArray1;
-//     var newArray2;
-//     var landingPoint = 0;
-//     for (var startingNote = 0; startingNote < notesArray.length; startingNote++){
-//         if (notesArray[startingNote] == starting_note){
-//             landingPoint = startingNote;
-//             newArray1 = (notesArray.slice(startingNote));
-//             newArray2 = (notesArray.slice(0, startingNote + 1));
-//             break;
-//         }
-//     }
-//     return newArray1.concat(newArray2)
-// }
-//
-// function createSixArrays(arrayOfStrings){
-//     arrayOne = arrayForString(arrayOfStrings[0]);
-//     arrayTwo = arrayForString(arrayOfStrings[1]);
-//     arrayThree = arrayForString(arrayOfStrings[2]);
-//     arrayFour = arrayForString(arrayOfStrings[3]);
-//     arrayFive = arrayForString(arrayOfStrings[4]);
-//     arraySix = arrayForString(arrayOfStrings[5]);
-//
-//     oneArrayToRuleThemAll = [arrayOne, arrayTwo, arrayThree, arrayFour, arrayFive, arraySix];
-//
-//     return oneArrayToRuleThemAll
-// }
-//
-// function assignNotesToDiagram(arrayOfStringNotes){
-//     for (var stringArray = 0; stringArray < arrayOfStringNotes.length; stringArray++){
-//         var firstCounter = String(stringArray + 1) + "_";
-//         var currentString = arrayOfStringNotes[stringArray];
-//
-//         for (var notesPerString = 0; notesPerString <= currentString.length; notesPerString++){
-//             var secondCounter = notesPerString;
-//             var fullCounter = firstCounter + String(secondCounter);
-//             var currentElement = "'#" + fullCounter + "'";
-//             // console.log("This is fret number " + String(notesPerString) + " " + currentString[notesPerString]);
-//             // console.log(fullCounter);
-//
-//         }
-//
-//     }
-// }
-
 function updateCurrentChoice() {
-    var rootNote = $('#root').val();
-    var quality = $('#quality').val();
+    //This function updates the display of what is currently selected as a chord
+
+    rootNote = $('#root').val();
+    quality = $('#quality').val();
     $('#current_choice').html(rootNote + " " + quality);
 }
 
-function findShape(spellingArray) {
+function findShape() {
+    //First this function runs resetColors() to clear the current colors off the fretboard
+    //Second, this function runs createChord() to get the right spelling and saves it as an array variable.
+    //This function basically searches the "strings" and lights up the ones that are in the spellingArray
+    resetColors();
+    var spellingArray = createChord();
     var tempArray = [];
     var sixthString = [];
     var fifthString = [];
@@ -165,10 +148,15 @@ function findShape(spellingArray) {
             }
         }
     }
+    resetOptions();
 }
 
+function resetColors(){
+    $('.square').css("background-color", "white");
+    $('.open_strings').css("background-color", "gray");
+}
 
-var cMajor = ['C', 'E', 'G', 'B', 'D', 'F'];
-findShape(cMajor);
-
-// assignNotesToDiagram(createSixArrays(stringsArray));
+function resetOptions(){
+    document.getElementById('root').selectedIndex = 0;
+    document.getElementById('quality').selectedIndex = 0;
+}
