@@ -3,12 +3,19 @@
  */
 var notesArray = ['A', 'A#/Bb', 'B', 'C', 'C#/Db', 'D', 'D#/Eb', 'E', 'F', 'F#/Gb', 'G', 'G#/Ab'];
 var stringsArray = ['E', 'A', 'D', 'G', 'B', 'E'];
+
 var major = [0, 4, 7];
 var minor = [0, 3, 7];
 var diminished = [0, 3, 6];
 var augmented = [0, 4, 8];
+var major7 = [0, 4, 7, 11];
+var minor7 = [0, 3, 7, 10];
+var minor7b5 = [0, 3, 6, 10];
+var dom7 = [0, 4, 7, 10];
+
 var rootnote;
 var quality;
+var shapeDictionary = {};
 
 resetColors();
 resetOptions();
@@ -38,6 +45,18 @@ function createChord() {
             break;
         case "diminished":
             chordFormula = diminished;
+            break;
+        case "major7":
+            chordFormula = major7;
+            break;
+        case "minor7":
+            chordFormula = minor7;
+            break;
+        case "minor7b5":
+            chordFormula = minor7b5;
+            break;
+        case "dominant7":
+            chordFormula = dom7;
             break;
         default:
             console.log("Defaulting B****!");
@@ -104,6 +123,8 @@ function findShape() {
                 currentChoice = sixthString[i];
                 currentChoice.style.backgroundColor = "red";
                 spellingArray.splice(0, 1);
+                //This console.log actually logs the id name
+                console.log(sixthString[i].id);
                 break;
             }
         }
