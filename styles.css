@@ -12,6 +12,18 @@
     margin: 10px 20px 10px 10px;
 }
 
+#root{
+    position: static;
+}
+
+#quality{
+    position: static;
+}
+
+#current_choice{
+    min-width: 10em;
+}
+
 #diagram{
     display: flex;
     flex-direction: column;

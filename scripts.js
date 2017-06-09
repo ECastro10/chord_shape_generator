@@ -8,6 +8,8 @@ var major = [0, 4, 7];
 var minor = [0, 3, 7];
 var diminished = [0, 3, 6];
 var augmented = [0, 4, 8];
+var sus2 = [0, 2, 7];
+var sus4 = [0, 5, 7];
 var major7 = [0, 4, 7, 11];
 var minor7 = [0, 3, 7, 10];
 var minor7b5 = [0, 3, 6, 10];
@@ -15,6 +17,7 @@ var dom7 = [0, 4, 7, 10];
 
 var rootnote;
 var quality;
+var shapeDistance = 0;
 var shapeDictionary = {};
 
 resetColors();
@@ -46,6 +49,12 @@ function createChord() {
         case "diminished":
             chordFormula = diminished;
             break;
+        case "sus2":
+            chordFormula = sus2;
+            break;
+        case "sus4":
+            chordFormula = sus4;
+            break;
         case "major7":
             chordFormula = major7;
             break;
@@ -55,7 +64,7 @@ function createChord() {
         case "minor7b5":
             chordFormula = minor7b5;
             break;
-        case "dominant7":
+        case "dom7":
             chordFormula = dom7;
             break;
         default:
