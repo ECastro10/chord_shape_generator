@@ -156,9 +156,6 @@ function findShape() {
                 currentChoice = fifthString[j];
 
                 if (determineNextNote(currentChoice, shapesDictionary["shape1"], 5) == true) {
-
-                    // console.log(determineNextNote(currentChoice, shapesDictionary["shape1"], 5));
-
                     shapesDictionary["shape1"][5] = parseInt(currentChoice.id.slice(2));
                     currentChoice.style.backgroundColor = "red";
                     spellingArray.splice(0, 1);
@@ -172,37 +169,61 @@ function findShape() {
         for (var k = 0; k < fourthString.length; k++) {
             if (fourthString[k].innerHTML == spellingArray[0]) {
                 currentChoice = fourthString[k];
-                shapesDictionary["shape1"][4] = parseInt(currentChoice.id.slice(2));
-                currentChoice.style.backgroundColor = "red";
-                spellingArray.splice(0, 1);
-                break;
+
+                if (determineNextNote(currentChoice, shapesDictionary["shape1"], 4) == true){
+                    shapesDictionary["shape1"][4] = parseInt(currentChoice.id.slice(2));
+                    currentChoice.style.backgroundColor = "red";
+                    spellingArray.splice(0, 1);
+                    break;
+
+                } else{
+                    break;
+                }
             }
         }
         for (var l = 0; l < thirdString.length; l++) {
             if (thirdString[l].innerHTML == spellingArray[0]) {
                 currentChoice = thirdString[l];
-                shapesDictionary["shape1"][3] = parseInt(currentChoice.id.slice(2));
-                currentChoice.style.backgroundColor = "red";
-                spellingArray.splice(0, 1);
-                break;
+
+                if(determineNextNote(currentChoice, shapesDictionary["shape1"], 3) == true){
+                    shapesDictionary["shape1"][3] = parseInt(currentChoice.id.slice(2));
+                    currentChoice.style.backgroundColor = "red";
+                    spellingArray.splice(0, 1);
+                    break;
+
+                } else{
+                    break;
+                }
             }
         }
         for (var m = 0; m < secondString.length; m++) {
             if (secondString[m].innerHTML == spellingArray[0]) {
                 currentChoice = secondString[m];
-                shapesDictionary["shape1"][2] = parseInt(currentChoice.id.slice(2));
-                currentChoice.style.backgroundColor = "red";
-                spellingArray.splice(0, 1);
-                break;
+
+                if (determineNextNote(currentChoice, shapesDictionary["shape1"], 2) == true) {
+                   shapesDictionary["shape1"][2] = parseInt(currentChoice.id.slice(2));
+                    currentChoice.style.backgroundColor = "red";
+                    spellingArray.splice(0, 1);
+                    break;
+
+                } else{
+                    break;
+                }
             }
         }
         for (var n = 0; n < firstString.length; n++) {
             if (firstString[n].innerHTML == spellingArray[0]) {
                 currentChoice = firstString[n];
-                shapesDictionary["shape1"][1] = parseInt(currentChoice.id.slice(2));
-                currentChoice.style.backgroundColor = "red";
-                spellingArray.splice(0, 1);
-                break;
+
+                if (determineNextNote(currentChoice, shapesDictionary["shape1"], 1) == true) {
+                    shapesDictionary["shape1"][1] = parseInt(currentChoice.id.slice(2));
+                    currentChoice.style.backgroundColor = "red";
+                    spellingArray.splice(0, 1);
+                    break;
+
+                } else{
+                    break;
+                }
             }
         }
     }
@@ -231,27 +252,22 @@ function shapeObject(){
 
 function determineNextNote(currentNote, currentShape, stringNumber){
 //    This function determines whether the next note is physically possible or not.
-    if (currentShape[1] == "" && currentShape[2] == "" && currentShape[3] == "" && currentShape[4] == "" &&
-        currentShape[5] == "" && currentShape[6] == ""){
-        return true;
+    var currentNoteFret = parseInt(currentNote.id.slice(2));
 
-    } else{
-        var currentNoteFret = parseInt(currentNote.id.slice(2));
+    for (var i = 6; i > 0; i--){
 
-        for (var i = 6; 6 > 0; i--){
-
-            if (currentShape[i] == "" || currentShape[i] == stringNumber){
-
-            } else{
-
-                if (Math.abs(currentNoteFret - currentShape[i]) > 3){
-
-                } else{
-
-                    return false;
-                }
+        if ((typeof currentShape[i]) == "string"){
+            console.log("iteration # ", i);
+            console.log("value = ", currentShape[i]);
+            console.log("string number", stringNumber);
+            console.log("");
+        } else{
+            if (Math.abs(currentNoteFret - currentShape[i]) > 3){
+                console.log("currently on ", stringNumber + " and possible note, " + currentNoteFret);
+                console.log(Math.abs(currentNoteFret - currentShape[i]));
+                return false;
             }
         }
-        return true;
     }
+    return true;
 }
