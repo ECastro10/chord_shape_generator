@@ -77,11 +77,3 @@
     width: 17px;
     align-items: center;
 }
-
-.hide-me{
-    display: none;
-}
-
-.reveal{
-    display: inline;
-}
