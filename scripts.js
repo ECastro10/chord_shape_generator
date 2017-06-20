@@ -119,6 +119,7 @@ function updateCurrentChoice() {
     rootNote = $('#root').val();
     quality = $('#quality').val();
     $('#current_choice').html(rootNote + " " + quality);
+    permutationsDone = false;
 }
 
 function findShape() {
@@ -137,8 +138,8 @@ function findShape() {
         for (var comboNum = 0; comboNum < currentSpellingCombos.length; comboNum++) {
             shapesDictionary["shape" + String(comboNum)] = shapeObject();
         }
-
         permutationsDone = true;
+
     }
 
     //This console.log tells you the length of the keys in an object
@@ -146,15 +147,8 @@ function findShape() {
 
     if (currentSpellingCombos[counter].length == 0) {
 
-        for (var string = 1; string < 7; string++) {
-
-            if (typeof shapesDictionary[currentShape][string] == "string"){
-
-            } else{
-                var idToLightUp = "#" + String(string) + "_" + String(shapesDictionary[currentShape][string]);
-                $(idToLightUp).css("background-color", "red");
-            }
-        }
+        lightItUp(currentShape);
+        console.log(currentShape);
 
     } else {
 
@@ -169,7 +163,7 @@ function findShape() {
 
                         if (determineNextNote(currentChoice, shapesDictionary[currentShape]) == true) {
                             shapesDictionary[currentShape][6] = parseInt(currentChoice.id.slice(2));
-                            currentChoice.style.backgroundColor = "red";
+                            // currentChoice.style.backgroundColor = "red";
                             currentSpellingCombos[counter].splice(0, 1);
                             break;
 
@@ -189,7 +183,7 @@ function findShape() {
 
                         if (determineNextNote(currentChoice, shapesDictionary[currentShape]) == true) {
                             shapesDictionary[currentShape][5] = parseInt(currentChoice.id.slice(2));
-                            currentChoice.style.backgroundColor = "red";
+                            // currentChoice.style.backgroundColor = "red";
                             currentSpellingCombos[counter].splice(0, 1);
                             break;
 
@@ -209,7 +203,7 @@ function findShape() {
 
                         if (determineNextNote(currentChoice, shapesDictionary[currentShape]) == true) {
                             shapesDictionary[currentShape][4] = parseInt(currentChoice.id.slice(2));
-                            currentChoice.style.backgroundColor = "red";
+                            // currentChoice.style.backgroundColor = "red";
                             currentSpellingCombos[counter].splice(0, 1);
                             break;
 
@@ -229,7 +223,7 @@ function findShape() {
 
                         if (determineNextNote(currentChoice, shapesDictionary[currentShape]) == true) {
                             shapesDictionary[currentShape][3] = parseInt(currentChoice.id.slice(2));
-                            currentChoice.style.backgroundColor = "red";
+                            // currentChoice.style.backgroundColor = "red";
                             currentSpellingCombos[counter].splice(0, 1);
                             break;
 
@@ -249,7 +243,7 @@ function findShape() {
 
                         if (determineNextNote(currentChoice, shapesDictionary[currentShape]) == true) {
                             shapesDictionary[currentShape][2] = parseInt(currentChoice.id.slice(2));
-                            currentChoice.style.backgroundColor = "red";
+                            // currentChoice.style.backgroundColor = "red";
                             currentSpellingCombos[counter].splice(0, 1);
                             break;
 
@@ -269,7 +263,7 @@ function findShape() {
 
                         if (determineNextNote(currentChoice, shapesDictionary[currentShape]) == true) {
                             shapesDictionary[currentShape][1] = parseInt(currentChoice.id.slice(2));
-                            currentChoice.style.backgroundColor = "red";
+                            // currentChoice.style.backgroundColor = "red";
                             currentSpellingCombos[counter].splice(0, 1);
                             break;
 
@@ -280,8 +274,26 @@ function findShape() {
                 }
             }
         }
+        if (counter == 0){
+            lightItUp(currentShape);
+        } else{
+
+        }
+        removeDuplicateShape(currentShape);
     }
     resetOptions();
+}
+
+function lightItUp(chordShape){
+    for (var string = 1; string < 7; string++) {
+
+            if (typeof shapesDictionary[chordShape][string] == "string"){
+
+            } else{
+                var idToLightUp = "#" + String(string) + "_" + String(shapesDictionary[chordShape][string]);
+                $(idToLightUp).css("background-color", "red");
+            }
+        }
 }
 
 function resetColors(){
@@ -299,10 +311,17 @@ function shapeObject(){
     return {6:"", 5:"", 4:"", 3:"", 2:"", 1:""};
 }
 
-//Playing with a way to create shape objects to include in the shapesDictionary
-// for (var i = 0; i < 5; i++){
-//     shapesDictionary["shape" + String(i)] = shapeObject();
-// }
+function removeDuplicateShape(currentShape){
+    var shapeString = "shape";
+
+    for (var shape = 0; shape < Object.keys(shapesDictionary).length; shape++) {
+
+        if (shapesDictionary[shapeString + String(shape)] == shapesDictionary[currentShape]) {
+            return false;
+        }
+    }
+    return true;
+}
 
 function determineNextNote(currentNote, currentShape){
 //    This function determines whether the next note is physically possible or not.
@@ -371,6 +390,5 @@ $('#next').click(function(){
 });
 
 $('#generate_button').click(function(){
-    permutationsDone = false;
     counter = 0;
 });
