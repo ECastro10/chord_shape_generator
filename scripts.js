@@ -21,8 +21,10 @@ var rootNote;
 var quality;
 var shapesDictionary = {};
 var currentSpellingCombos;
-var counter = 0;
+var shapeCounter = 0;
+var comboCounter = 0;
 var permutationsDone = false;
+var spellingArray;
 
 var tempArray = [];
 var sixthString = [];
@@ -123,185 +125,207 @@ function updateCurrentChoice() {
 }
 
 function findShape() {
-    //First this function runs resetColors() to clear the current colors off the fretboard.
-    //Second, this function runs createChord() to get the right spelling and saves it as an array variable.
-    //It then runs the permute function to create all possible spelling variations.
-    //This function basically searches the "strings" and lights up the ones that are in the spellingArray
-    resetColors();
-    var spellingArray = createChord();
+    //This functions job is to regularly update the current shape name, if that current shape
+    //does not exist as a key in shapesDictionary, create that object inside of the shapesDictionary
+    //and give it some temporary values for shapeRegulator() to evaluate.
+
     var currentChoice;
-    var currentShape = "shape" + String(counter);
+    var currentShape = "shape" + String(shapeCounter);
 
-    if (permutationsDone == false) {
-        currentSpellingCombos = permute(spellingArray);
-
-        for (var comboNum = 0; comboNum < currentSpellingCombos.length; comboNum++) {
-            shapesDictionary["shape" + String(comboNum)] = shapeObject();
-        }
-        permutationsDone = true;
-
+    if (typeof (shapesDictionary[currentShape]) == "undefined"){
+        shapesDictionary[currentShape] = shapeObject();
     }
 
     //This console.log tells you the length of the keys in an object
     // console.log(Object.keys(shapesDictionary).length);
 
-    if (currentSpellingCombos[counter].length == 0) {
+    while (currentSpellingCombos[comboCounter].length > 0) {
 
-        lightItUp(currentShape);
-        console.log(currentShape);
+        if (typeof shapesDictionary[currentShape][6] == "string"){
 
-    } else {
+            for (var i = 0; i < sixthString.length; i++) {
 
-        while (currentSpellingCombos[counter].length > 0) {
+                if (sixthString[i].innerHTML == currentSpellingCombos[comboCounter][0]) {
+                    currentChoice = sixthString[i];
 
-            if (typeof shapesDictionary[currentShape][6] == "string"){
+                    if (determineNextNote(currentChoice, shapesDictionary[currentShape]) == true) {
+                        shapesDictionary[currentShape][6] = parseInt(currentChoice.id.slice(2));
+                        currentSpellingCombos[comboCounter].splice(0, 1);
+                        break;
 
-                for (var i = 0; i < sixthString.length; i++) {
-
-                    if (sixthString[i].innerHTML == currentSpellingCombos[counter][0]) {
-                        currentChoice = sixthString[i];
-
-                        if (determineNextNote(currentChoice, shapesDictionary[currentShape]) == true) {
-                            shapesDictionary[currentShape][6] = parseInt(currentChoice.id.slice(2));
-                            // currentChoice.style.backgroundColor = "red";
-                            currentSpellingCombos[counter].splice(0, 1);
-                            break;
-
-                        } else {
-                            break;
-                        }
-                    }
-                }
-            }
-
-            if (typeof shapesDictionary[currentShape][5] == "string") {
-
-                for (var j = 0; j < fifthString.length; j++) {
-
-                    if (fifthString[j].innerHTML == currentSpellingCombos[counter][0]) {
-                        currentChoice = fifthString[j];
-
-                        if (determineNextNote(currentChoice, shapesDictionary[currentShape]) == true) {
-                            shapesDictionary[currentShape][5] = parseInt(currentChoice.id.slice(2));
-                            // currentChoice.style.backgroundColor = "red";
-                            currentSpellingCombos[counter].splice(0, 1);
-                            break;
-
-                        } else {
-                            break;
-                        }
-                    }
-                }
-            }
-
-            if (typeof shapesDictionary[currentShape][4] == "string") {
-
-                for (var k = 0; k < fourthString.length; k++) {
-
-                    if (fourthString[k].innerHTML == currentSpellingCombos[counter][0]) {
-                        currentChoice = fourthString[k];
-
-                        if (determineNextNote(currentChoice, shapesDictionary[currentShape]) == true) {
-                            shapesDictionary[currentShape][4] = parseInt(currentChoice.id.slice(2));
-                            // currentChoice.style.backgroundColor = "red";
-                            currentSpellingCombos[counter].splice(0, 1);
-                            break;
-
-                        } else {
-                            break;
-                        }
-                    }
-                }
-            }
-
-            if (typeof shapesDictionary[currentShape][3] == "string") {
-
-                for (var l = 0; l < thirdString.length; l++) {
-
-                    if (thirdString[l].innerHTML == currentSpellingCombos[counter][0]) {
-                        currentChoice = thirdString[l];
-
-                        if (determineNextNote(currentChoice, shapesDictionary[currentShape]) == true) {
-                            shapesDictionary[currentShape][3] = parseInt(currentChoice.id.slice(2));
-                            // currentChoice.style.backgroundColor = "red";
-                            currentSpellingCombos[counter].splice(0, 1);
-                            break;
-
-                        } else {
-                            break;
-                        }
-                    }
-                }
-            }
-
-            if (typeof shapesDictionary[currentShape][2] == "string") {
-
-                for (var m = 0; m < secondString.length; m++) {
-
-                    if (secondString[m].innerHTML == currentSpellingCombos[counter][0]) {
-                        currentChoice = secondString[m];
-
-                        if (determineNextNote(currentChoice, shapesDictionary[currentShape]) == true) {
-                            shapesDictionary[currentShape][2] = parseInt(currentChoice.id.slice(2));
-                            // currentChoice.style.backgroundColor = "red";
-                            currentSpellingCombos[counter].splice(0, 1);
-                            break;
-
-                        } else {
-                            break;
-                        }
-                    }
-                }
-            }
-
-            if (typeof shapesDictionary[currentShape][1] == "string") {
-
-                for (var n = 0; n < firstString.length; n++) {
-
-                    if (firstString[n].innerHTML == currentSpellingCombos[counter][0]) {
-                        currentChoice = firstString[n];
-
-                        if (determineNextNote(currentChoice, shapesDictionary[currentShape]) == true) {
-                            shapesDictionary[currentShape][1] = parseInt(currentChoice.id.slice(2));
-                            // currentChoice.style.backgroundColor = "red";
-                            currentSpellingCombos[counter].splice(0, 1);
-                            break;
-
-                        } else {
-                            break;
-                        }
+                    } else {
+                        break;
                     }
                 }
             }
         }
-        if (counter == 0){
-            lightItUp(currentShape);
-        } else{
 
+        if (typeof shapesDictionary[currentShape][5] == "string") {
+
+            for (var j = 0; j < fifthString.length; j++) {
+
+                if (fifthString[j].innerHTML == currentSpellingCombos[comboCounter][0]) {
+                    currentChoice = fifthString[j];
+
+                    if (determineNextNote(currentChoice, shapesDictionary[currentShape]) == true) {
+                        shapesDictionary[currentShape][5] = parseInt(currentChoice.id.slice(2));
+                        currentSpellingCombos[comboCounter].splice(0, 1);
+                        break;
+
+                    } else {
+                        break;
+                    }
+                }
+            }
         }
-        removeDuplicateShape(currentShape);
+
+        if (typeof shapesDictionary[currentShape][4] == "string") {
+
+            for (var k = 0; k < fourthString.length; k++) {
+
+                if (fourthString[k].innerHTML == currentSpellingCombos[comboCounter][0]) {
+                    currentChoice = fourthString[k];
+
+                    if (determineNextNote(currentChoice, shapesDictionary[currentShape]) == true) {
+                        shapesDictionary[currentShape][4] = parseInt(currentChoice.id.slice(2));
+                        currentSpellingCombos[comboCounter].splice(0, 1);
+                        break;
+
+                    } else {
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (typeof shapesDictionary[currentShape][3] == "string") {
+
+            for (var l = 0; l < thirdString.length; l++) {
+
+                if (thirdString[l].innerHTML == currentSpellingCombos[comboCounter][0]) {
+                    currentChoice = thirdString[l];
+
+                    if (determineNextNote(currentChoice, shapesDictionary[currentShape]) == true) {
+                        shapesDictionary[currentShape][3] = parseInt(currentChoice.id.slice(2));
+                        currentSpellingCombos[comboCounter].splice(0, 1);
+                        break;
+
+                    } else {
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (typeof shapesDictionary[currentShape][2] == "string") {
+
+            for (var m = 0; m < secondString.length; m++) {
+
+                if (secondString[m].innerHTML == currentSpellingCombos[comboCounter][0]) {
+                    currentChoice = secondString[m];
+
+                    if (determineNextNote(currentChoice, shapesDictionary[currentShape]) == true) {
+                        shapesDictionary[currentShape][2] = parseInt(currentChoice.id.slice(2));
+                        currentSpellingCombos[comboCounter].splice(0, 1);
+                        break;
+
+                    } else {
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (typeof shapesDictionary[currentShape][1] == "string") {
+
+            for (var n = 0; n < firstString.length; n++) {
+
+                if (firstString[n].innerHTML == currentSpellingCombos[comboCounter][0]) {
+                    currentChoice = firstString[n];
+
+                    if (determineNextNote(currentChoice, shapesDictionary[currentShape]) == true) {
+                        shapesDictionary[currentShape][1] = parseInt(currentChoice.id.slice(2));
+                        currentSpellingCombos[comboCounter].splice(0, 1);
+                        break;
+
+                    } else {
+                        break;
+                    }
+                }
+            }
+        }
     }
-    resetOptions();
+    return currentShape;
 }
 
-function lightItUp(chordShape){
+function shapeRegulator(){
+    //First this function runs resetColors() to clear the current colors off the fretboard.
+    //Second, this function runs resetOptions() to simply do it now rather than later.
+    //It then runs the permute function to create all possible spelling variations.
+    //This function also contains the logic for what the current shape's fate will be. It helps prevent duplicate shapes
+    resetColors();
+    spellingArray = createChord();
+    resetOptions();
+    var shapeToEvaluate;
+
+    if (permutationsDone == false) {
+        currentSpellingCombos = permute(spellingArray);
+        permutationsDone = true;
+
+    }
+
+    if (comboCounter == 0) {
+        shapeToEvaluate = findShape();
+        lightItUp(shapeToEvaluate);
+
+        } else if (currentSpellingCombos[comboCounter].length == 0) {
+            lightItUp("shape" + String(shapeCounter));
+
+        } else{
+            shapeToEvaluate = findShape();
+            
+            console.log(shapesDictionary[shapeToEvaluate]);
+            console.log(shapesDictionary["shape" + String(shapeCounter - 1)]);
+
+            while (preventDuplicateShape(shapeToEvaluate) == false || comboCounter == 0) {
+                comboCounter++;
+                findShape();
+            }
+            if (shapesDictionary[shapeToEvaluate][6] == "" && shapesDictionary[shapeToEvaluate][5] == "" &&
+            shapesDictionary[shapeToEvaluate][4] == "" && shapesDictionary[shapeToEvaluate][3] == "" &&
+            shapesDictionary[shapeToEvaluate][2] == "" && shapesDictionary[shapeToEvaluate][1] == "") {
+                shapeCounter--;
+                lightItUp("shape" + String(shapeCounter));
+            } else{
+                lightItUp(shapeToEvaluate);
+            }
+        }
+}
+
+function lightItUp(chordShapeKey){
+    // This function is used to "light up" the correct notes in the chord shape.
+    //Straightforward, for loop numbers 1 through 6, those are the strings and the keys.
+    //Take the key and if it has a numerical value pair, concatenate with a "_" and cast it as a string
+    //to find this element on the DOM. Then change the background-color to red.
     for (var string = 1; string < 7; string++) {
 
-            if (typeof shapesDictionary[chordShape][string] == "string"){
+            if (typeof shapesDictionary[chordShapeKey][string] == "string"){
 
             } else{
-                var idToLightUp = "#" + String(string) + "_" + String(shapesDictionary[chordShape][string]);
+                var idToLightUp = "#" + String(string) + "_" + String(shapesDictionary[chordShapeKey][string]);
                 $(idToLightUp).css("background-color", "red");
             }
         }
 }
 
 function resetColors(){
+    //This function resets all the "lit" up squares to their original values.
     $('.square').css("background-color", "white");
     $('.open_strings').css("background-color", "gray");
 }
 
 function resetOptions(){
+    //Resets the options such as root name and chord quality
     document.getElementById('root').selectedIndex = 0;
     document.getElementById('quality').selectedIndex = 0;
 }
@@ -311,12 +335,13 @@ function shapeObject(){
     return {6:"", 5:"", 4:"", 3:"", 2:"", 1:""};
 }
 
-function removeDuplicateShape(currentShape){
+function preventDuplicateShape(currentShapeKey){
+    //This function is used to prevent a duplicate shape.
     var shapeString = "shape";
 
     for (var shape = 0; shape < Object.keys(shapesDictionary).length; shape++) {
 
-        if (shapesDictionary[shapeString + String(shape)] == shapesDictionary[currentShape]) {
+        if (shapesDictionary[shapeString + String(shape)] == shapesDictionary[currentShapeKey]) {
             return false;
         }
     }
@@ -372,23 +397,36 @@ function permute(permutation) {
 }
 
 $('#previous').click(function(){
-    if (counter == 0) {
-    counter = (currentSpellingCombos.length - 1)
-    } else {
-    counter--;
+    if (comboCounter == 0 && shapeCounter == 0) {
+        comboCounter = (currentSpellingCombos.length - 1);
+        shapeCounter = (Object.keys(shapesDictionary) - 1);
+    } else if (comboCounter == 0) {
+        comboCounter = (currentSpellingCombos.length - 1);
+    } else if (shapeCounter == 0) {
+        shapeCounter = (Object.keys(shapesDictionary) - 1);
+    } else{
+    comboCounter--;
+    shapeCounter++;
     }
-    findShape()
+    shapeRegulator()
 });
 
 $('#next').click(function(){
-    if (counter == currentSpellingCombos.length -1) {
-        counter = 0;
-    } else {
-        counter++;
+    if (comboCounter == (currentSpellingCombos - 1) && shapeCounter == (Object.keys(shapesDictionary) - 1)) {
+        comboCounter = 0;
+        shapeCounter = 0;
+    } else if (comboCounter == (currentSpellingCombos - 1)) {
+        comboCounter = 0;
+    } else if (shapeCounter == (Object.keys(shapesDictionary) - 1)) {
+        shapeCounter = 0;
+    } else{
+    comboCounter++;
+    shapeCounter++;
     }
-    findShape();
+    shapeRegulator()
 });
 
 $('#generate_button').click(function(){
-    counter = 0;
+    comboCounter = 0;
+    shapeCounter = 0;
 });
