@@ -22,7 +22,6 @@ var quality;
 var shapesDictionary = {};
 var currentSpellingCombos;
 var shapeCounter = 0;
-var comboCounter = 0;
 var permutationsDone = false;
 var spellingArray;
 
@@ -139,18 +138,18 @@ function findShape() {
     //This console.log tells you the length of the keys in an object
     // console.log(Object.keys(shapesDictionary).length);
 
-    while (currentSpellingCombos[comboCounter].length > 0) {
+    while (currentSpellingCombos[0].length > 0) {
 
         if (typeof shapesDictionary[currentShape][6] == "string"){
 
             for (var i = 0; i < sixthString.length; i++) {
 
-                if (sixthString[i].innerHTML == currentSpellingCombos[comboCounter][0]) {
+                if (sixthString[i].innerHTML == currentSpellingCombos[0][0]) {
                     currentChoice = sixthString[i];
 
                     if (determineNextNote(currentChoice, shapesDictionary[currentShape]) == true) {
                         shapesDictionary[currentShape][6] = parseInt(currentChoice.id.slice(2));
-                        currentSpellingCombos[comboCounter].splice(0, 1);
+                        currentSpellingCombos[0].splice(0, 1);
                         break;
 
                     } else {
@@ -164,12 +163,12 @@ function findShape() {
 
             for (var j = 0; j < fifthString.length; j++) {
 
-                if (fifthString[j].innerHTML == currentSpellingCombos[comboCounter][0]) {
+                if (fifthString[j].innerHTML == currentSpellingCombos[0][0]) {
                     currentChoice = fifthString[j];
 
                     if (determineNextNote(currentChoice, shapesDictionary[currentShape]) == true) {
                         shapesDictionary[currentShape][5] = parseInt(currentChoice.id.slice(2));
-                        currentSpellingCombos[comboCounter].splice(0, 1);
+                        currentSpellingCombos[0].splice(0, 1);
                         break;
 
                     } else {
@@ -183,12 +182,12 @@ function findShape() {
 
             for (var k = 0; k < fourthString.length; k++) {
 
-                if (fourthString[k].innerHTML == currentSpellingCombos[comboCounter][0]) {
+                if (fourthString[k].innerHTML == currentSpellingCombos[0][0]) {
                     currentChoice = fourthString[k];
 
                     if (determineNextNote(currentChoice, shapesDictionary[currentShape]) == true) {
                         shapesDictionary[currentShape][4] = parseInt(currentChoice.id.slice(2));
-                        currentSpellingCombos[comboCounter].splice(0, 1);
+                        currentSpellingCombos[0].splice(0, 1);
                         break;
 
                     } else {
@@ -202,12 +201,12 @@ function findShape() {
 
             for (var l = 0; l < thirdString.length; l++) {
 
-                if (thirdString[l].innerHTML == currentSpellingCombos[comboCounter][0]) {
+                if (thirdString[l].innerHTML == currentSpellingCombos[0][0]) {
                     currentChoice = thirdString[l];
 
                     if (determineNextNote(currentChoice, shapesDictionary[currentShape]) == true) {
                         shapesDictionary[currentShape][3] = parseInt(currentChoice.id.slice(2));
-                        currentSpellingCombos[comboCounter].splice(0, 1);
+                        currentSpellingCombos[0].splice(0, 1);
                         break;
 
                     } else {
@@ -221,12 +220,12 @@ function findShape() {
 
             for (var m = 0; m < secondString.length; m++) {
 
-                if (secondString[m].innerHTML == currentSpellingCombos[comboCounter][0]) {
+                if (secondString[m].innerHTML == currentSpellingCombos[0][0]) {
                     currentChoice = secondString[m];
 
                     if (determineNextNote(currentChoice, shapesDictionary[currentShape]) == true) {
                         shapesDictionary[currentShape][2] = parseInt(currentChoice.id.slice(2));
-                        currentSpellingCombos[comboCounter].splice(0, 1);
+                        currentSpellingCombos[0].splice(0, 1);
                         break;
 
                     } else {
@@ -240,12 +239,12 @@ function findShape() {
 
             for (var n = 0; n < firstString.length; n++) {
 
-                if (firstString[n].innerHTML == currentSpellingCombos[comboCounter][0]) {
+                if (firstString[n].innerHTML == currentSpellingCombos[0][0]) {
                     currentChoice = firstString[n];
 
                     if (determineNextNote(currentChoice, shapesDictionary[currentShape]) == true) {
                         shapesDictionary[currentShape][1] = parseInt(currentChoice.id.slice(2));
-                        currentSpellingCombos[comboCounter].splice(0, 1);
+                        currentSpellingCombos[0].splice(0, 1);
                         break;
 
                     } else {
@@ -255,6 +254,7 @@ function findShape() {
             }
         }
     }
+    currentSpellingCombos.splice(0,1);
     return currentShape;
 }
 
@@ -274,31 +274,20 @@ function shapeRegulator(){
 
     }
 
-    if (comboCounter == 0) {
+    console.log(shapesDictionary);
+    console.log("shape Counter ", shapeCounter);
+
+    if (currentSpellingCombos.length == 0){
+        lightItUp("shape" + String(shapeCounter));
+    } else{
         shapeToEvaluate = findShape();
-        lightItUp(shapeToEvaluate);
 
-        } else if (currentSpellingCombos[comboCounter].length == 0) {
-            lightItUp("shape" + String(shapeCounter));
-
-        } else{
+        while (preventDuplicateShape(shapeToEvaluate) == false) {
+            console.log(preventDuplicateShape(shapeToEvaluate));
+            delete shapesDictionary[shapeToEvaluate];
             shapeToEvaluate = findShape();
-            
-            console.log(shapesDictionary[shapeToEvaluate]);
-            console.log(shapesDictionary["shape" + String(shapeCounter - 1)]);
-
-            while (preventDuplicateShape(shapeToEvaluate) == false || comboCounter == 0) {
-                comboCounter++;
-                findShape();
-            }
-            if (shapesDictionary[shapeToEvaluate][6] == "" && shapesDictionary[shapeToEvaluate][5] == "" &&
-            shapesDictionary[shapeToEvaluate][4] == "" && shapesDictionary[shapeToEvaluate][3] == "" &&
-            shapesDictionary[shapeToEvaluate][2] == "" && shapesDictionary[shapeToEvaluate][1] == "") {
-                shapeCounter--;
-                lightItUp("shape" + String(shapeCounter));
-            } else{
-                lightItUp(shapeToEvaluate);
-            }
+        }
+        lightItUp(shapeToEvaluate);
         }
 }
 
@@ -341,8 +330,21 @@ function preventDuplicateShape(currentShapeKey){
 
     for (var shape = 0; shape < Object.keys(shapesDictionary).length; shape++) {
 
-        if (shapesDictionary[shapeString + String(shape)] == shapesDictionary[currentShapeKey]) {
-            return false;
+        if (shape == shapeCounter){
+
+        } else {
+
+            // console.log("*******");
+            // console.log("shape being evaluated");
+            // console.log(shapesDictionary[currentShapeKey]);
+            // console.log(shapesDictionary[shapeString + String(shape)]);
+            // console.log(shapesDictionary[shapeString + String(shape)] == shapesDictionary[currentShapeKey]);
+            // console.log("*******");
+
+
+            if (shapesDictionary[shapeString + String(shape)] == shapesDictionary[currentShapeKey]) {
+                return false;
+            }
         }
     }
     return true;
@@ -397,36 +399,28 @@ function permute(permutation) {
 }
 
 $('#previous').click(function(){
-    if (comboCounter == 0 && shapeCounter == 0) {
-        comboCounter = (currentSpellingCombos.length - 1);
-        shapeCounter = (Object.keys(shapesDictionary) - 1);
-    } else if (comboCounter == 0) {
-        comboCounter = (currentSpellingCombos.length - 1);
-    } else if (shapeCounter == 0) {
-        shapeCounter = (Object.keys(shapesDictionary) - 1);
-    } else{
-    comboCounter--;
-    shapeCounter++;
+    shapeCounter--;
+    if (shapeCounter == 0) {
+        $('#previous').fadeOut(10);
+    } else if (shapeCounter < Object.keys(shapesDictionary).length){
+        $('#next').fadeIn(10);
     }
-    shapeRegulator()
+    shapeRegulator();
 });
 
 $('#next').click(function(){
-    if (comboCounter == (currentSpellingCombos - 1) && shapeCounter == (Object.keys(shapesDictionary) - 1)) {
-        comboCounter = 0;
-        shapeCounter = 0;
-    } else if (comboCounter == (currentSpellingCombos - 1)) {
-        comboCounter = 0;
-    } else if (shapeCounter == (Object.keys(shapesDictionary) - 1)) {
-        shapeCounter = 0;
-    } else{
-    comboCounter++;
     shapeCounter++;
+    if (currentSpellingCombos.length == 1 && shapeCounter == Object.keys(shapesDictionary).length) {
+        $('#next').fadeOut(10);
+    } else if (currentSpellingCombos.length == 0 && shapeCounter == Object.keys(shapesDictionary).length -1) {
+        $('#next').fadeOut(10);
+    } else if (shapeCounter == 1) {
+        $('#previous').fadeIn(10);
     }
-    shapeRegulator()
+    shapeRegulator();
 });
 
 $('#generate_button').click(function(){
-    comboCounter = 0;
     shapeCounter = 0;
+    $('#next').fadeIn(10);
 });

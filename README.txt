@@ -11,6 +11,7 @@ due to the parameters, so if you use it, you might encounter a shape that won't 
 I have it to where the options selected reset after the find shape button is clicked but the name remains to show what the shape in red 
 shows. The name will change automatically as the user chooses another root/quality. It is important to note that you will currently see
 some repeated shapes just because it looks for these chords starting from the 6th string.
+Previous and Next buttons appear and disappear when appropriate.
 
 Things to add:
 Being able to go through different shapes without the risk of a never ending script.
