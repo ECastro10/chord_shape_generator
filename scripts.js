@@ -73,6 +73,7 @@ function createChord() {
             arrayForConstruction = (notesArray.slice(startingNote).concat(notesArray.slice(0, startingNote + 1)));
         }
     }
+
     switch (quality) {
         case "major":
             chordFormula = major;
@@ -120,6 +121,10 @@ function updateCurrentChoice() {
     rootNote = $('#root').val();
     quality = $('#quality').val();
     $('#current_choice').html(rootNote + " " + quality);
+    resetColors();
+    $('#next').hide();
+    $('#previous').hide();
+    shapesDictionary = {};
     permutationsDone = false;
 }
 
@@ -131,7 +136,9 @@ function findShape() {
     var currentChoice;
     var currentShape = "shape" + String(shapeCounter);
 
-    if (typeof (shapesDictionary[currentShape]) == "undefined"){
+    if (typeof currentSpellingCombos[0] == "undefined") {
+        return false;
+    } else if (typeof (shapesDictionary[currentShape]) == "undefined"){
         shapesDictionary[currentShape] = shapeObject();
     }
 
@@ -271,24 +278,26 @@ function shapeRegulator(){
     if (permutationsDone == false) {
         currentSpellingCombos = permute(spellingArray);
         permutationsDone = true;
-
     }
 
-    console.log(shapesDictionary);
-    console.log("shape Counter ", shapeCounter);
+    // console.log(shapesDictionary);
+    // console.log("shape Counter ", shapeCounter);
 
-    if (currentSpellingCombos.length == 0){
+
+    if (currentSpellingCombos.length == 0 || typeof shapesDictionary["shape" + String(shapeCounter)] == "object"){
         lightItUp("shape" + String(shapeCounter));
+
     } else{
         shapeToEvaluate = findShape();
+        
+        if (preventDuplicateShape(shapeToEvaluate) == false) {
 
-        while (preventDuplicateShape(shapeToEvaluate) == false) {
-            console.log(preventDuplicateShape(shapeToEvaluate));
+            //Delete the current shapeObject and start anew from the next combo in the array
             delete shapesDictionary[shapeToEvaluate];
             shapeToEvaluate = findShape();
         }
         lightItUp(shapeToEvaluate);
-        }
+    }
 }
 
 function lightItUp(chordShapeKey){
@@ -324,25 +333,20 @@ function shapeObject(){
     return {6:"", 5:"", 4:"", 3:"", 2:"", 1:""};
 }
 
-function preventDuplicateShape(currentShapeKey){
+function preventDuplicateShape(currentShapeKey) {
     //This function is used to prevent a duplicate shape.
-    var shapeString = "shape";
 
-    for (var shape = 0; shape < Object.keys(shapesDictionary).length; shape++) {
+    if (shapeCounter == 0) {
 
-        if (shape == shapeCounter){
+    } else {
 
-        } else {
-
-            // console.log("*******");
-            // console.log("shape being evaluated");
-            // console.log(shapesDictionary[currentShapeKey]);
-            // console.log(shapesDictionary[shapeString + String(shape)]);
-            // console.log(shapesDictionary[shapeString + String(shape)] == shapesDictionary[currentShapeKey]);
-            // console.log("*******");
-
-
-            if (shapesDictionary[shapeString + String(shape)] == shapesDictionary[currentShapeKey]) {
+        for (var shape = 0; shape < shapeCounter; shape++) {
+            if (shapesDictionary["shape" + String(shape)][6] == shapesDictionary[currentShapeKey][6] &&
+                shapesDictionary["shape" + String(shape)][5] == shapesDictionary[currentShapeKey][5] &&
+                shapesDictionary["shape" + String(shape)][4] == shapesDictionary[currentShapeKey][4] &&
+                shapesDictionary["shape" + String(shape)][3] == shapesDictionary[currentShapeKey][3] &&
+                shapesDictionary["shape" + String(shape)][2] == shapesDictionary[currentShapeKey][2] &&
+                shapesDictionary["shape" + String(shape)][1] == shapesDictionary[currentShapeKey][1]) {
                 return false;
             }
         }
