@@ -125,6 +125,7 @@ function updateCurrentChoice() {
     $('#next').hide();
     $('#previous').hide();
     shapesDictionary = {};
+    shapeCounter = 0;
     permutationsDone = false;
 }
 
@@ -191,7 +192,6 @@ function findShape() {
 
                 if (fourthString[k].innerHTML == currentSpellingCombos[0][0]) {
                     currentChoice = fourthString[k];
-
                     if (determineNextNote(currentChoice, shapesDictionary[currentShape]) == true) {
                         shapesDictionary[currentShape][4] = parseInt(currentChoice.id.slice(2));
                         currentSpellingCombos[0].splice(0, 1);
@@ -271,11 +271,11 @@ function shapeRegulator(){
     //It then runs the permute function to create all possible spelling variations.
     //This function also contains the logic for what the current shape's fate will be. It helps prevent duplicate shapes
     resetColors();
-    spellingArray = createChord();
     resetOptions();
     var shapeToEvaluate;
 
     if (permutationsDone == false) {
+        spellingArray = createChord();
         currentSpellingCombos = permute(spellingArray);
         permutationsDone = true;
     }
@@ -294,9 +294,18 @@ function shapeRegulator(){
 
             //Delete the current shapeObject and start anew from the next combo in the array
             delete shapesDictionary[shapeToEvaluate];
-            shapeToEvaluate = findShape();
+
+            if (currentSpellingCombos.length == 0){
+                shapeCounter--;
+                shapeRegulator();
+
+            } else {
+                shapeRegulator();
+            }
+
+        } else {
+            lightItUp(shapeToEvaluate);
         }
-        lightItUp(shapeToEvaluate);
     }
 }
 
@@ -341,12 +350,13 @@ function preventDuplicateShape(currentShapeKey) {
     } else {
 
         for (var shape = 0; shape < shapeCounter; shape++) {
-            if (shapesDictionary["shape" + String(shape)][6] == shapesDictionary[currentShapeKey][6] &&
-                shapesDictionary["shape" + String(shape)][5] == shapesDictionary[currentShapeKey][5] &&
-                shapesDictionary["shape" + String(shape)][4] == shapesDictionary[currentShapeKey][4] &&
-                shapesDictionary["shape" + String(shape)][3] == shapesDictionary[currentShapeKey][3] &&
-                shapesDictionary["shape" + String(shape)][2] == shapesDictionary[currentShapeKey][2] &&
-                shapesDictionary["shape" + String(shape)][1] == shapesDictionary[currentShapeKey][1]) {
+            var shapeToCompare = shapesDictionary["shape" + String(shape)];
+            if (shapeToCompare[6] == shapesDictionary[currentShapeKey][6] &&
+                shapeToCompare[5] == shapesDictionary[currentShapeKey][5] &&
+                shapeToCompare[4] == shapesDictionary[currentShapeKey][4] &&
+                shapeToCompare[3] == shapesDictionary[currentShapeKey][3] &&
+                shapeToCompare[2] == shapesDictionary[currentShapeKey][2] &&
+                shapeToCompare[1] == shapesDictionary[currentShapeKey][1]) {
                 return false;
             }
         }
@@ -363,7 +373,6 @@ function determineNextNote(currentNote, currentShape){
         if ((typeof currentShape[i]) == "string"){
 
         } else{
-
             if (Math.abs(currentNoteFret - currentShape[i]) > 3){
 
                 return false;
@@ -405,9 +414,9 @@ function permute(permutation) {
 $('#previous').click(function(){
     shapeCounter--;
     if (shapeCounter == 0) {
-        $('#previous').fadeOut(10);
+        $('#previous').fadeOut(1);
     } else if (shapeCounter < Object.keys(shapesDictionary).length){
-        $('#next').fadeIn(10);
+        $('#next').fadeIn(1);
     }
     shapeRegulator();
 });
@@ -415,16 +424,15 @@ $('#previous').click(function(){
 $('#next').click(function(){
     shapeCounter++;
     if (currentSpellingCombos.length == 1 && shapeCounter == Object.keys(shapesDictionary).length) {
-        $('#next').fadeOut(10);
+        $('#next').fadeOut(1);
     } else if (currentSpellingCombos.length == 0 && shapeCounter == Object.keys(shapesDictionary).length -1) {
-        $('#next').fadeOut(10);
+        $('#next').fadeOut(1);
     } else if (shapeCounter == 1) {
-        $('#previous').fadeIn(10);
+        $('#previous').fadeIn(1);
     }
     shapeRegulator();
 });
 
 $('#generate_button').click(function(){
-    shapeCounter = 0;
-    $('#next').fadeIn(10);
+    $('#next').fadeIn(1);
 });
