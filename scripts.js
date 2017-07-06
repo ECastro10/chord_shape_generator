@@ -148,15 +148,45 @@ function findShape() {
 
     while (currentSpellingCombos[0].length > 0) {
 
-        if (typeof shapesDictionary[currentShape][6] == "string"){
+    for (var i = 6; i > 0; i--) {
 
-            for (var i = 0; i < sixthString.length; i++) {
+        if (typeof shapesDictionary[currentShape][i] == "string") {
 
-                if (sixthString[i].innerHTML == currentSpellingCombos[0][0]) {
-                    currentChoice = sixthString[i];
+            var guitarString;
+            switch (i) {
+                case 6:
+                    guitarString = sixthString;
+                    break;
+                case 5:
+                    guitarString = fifthString;
+                    break;
+                case 4:
+                    guitarString = fourthString;
+                    break;
+                case 3:
+                    guitarString = thirdString;
+                    break;
+                case 2:
+                    guitarString = secondString;
+                    break;
+                case 1:
+                    guitarString = firstString;
+                    break;
+                default:
+                    console.log("Defaulting B****!");
+                    break;
+            }
+
+            for (var j = 0; j < guitarString.length; j++){
+
+                if (guitarString[j].innerHTML == currentSpellingCombos[0][0]){
+
+                    currentChoice = guitarString[j];
 
                     if (determineNextNote(currentChoice, shapesDictionary[currentShape]) == true) {
-                        shapesDictionary[currentShape][6] = parseInt(currentChoice.id.slice(2));
+
+                        shapesDictionary[currentShape][i] = parseInt(currentChoice.id.slice(2));
+
                         currentSpellingCombos[0].splice(0, 1);
                         break;
 
@@ -164,103 +194,13 @@ function findShape() {
                         break;
                     }
                 }
+
             }
+
         }
 
-        if (typeof shapesDictionary[currentShape][5] == "string") {
-
-            for (var j = 0; j < fifthString.length; j++) {
-
-                if (fifthString[j].innerHTML == currentSpellingCombos[0][0]) {
-                    currentChoice = fifthString[j];
-
-                    if (determineNextNote(currentChoice, shapesDictionary[currentShape]) == true) {
-                        shapesDictionary[currentShape][5] = parseInt(currentChoice.id.slice(2));
-                        currentSpellingCombos[0].splice(0, 1);
-                        break;
-
-                    } else {
-                        break;
-                    }
-                }
-            }
-        }
-
-        if (typeof shapesDictionary[currentShape][4] == "string") {
-
-            for (var k = 0; k < fourthString.length; k++) {
-
-                if (fourthString[k].innerHTML == currentSpellingCombos[0][0]) {
-                    currentChoice = fourthString[k];
-                    if (determineNextNote(currentChoice, shapesDictionary[currentShape]) == true) {
-                        shapesDictionary[currentShape][4] = parseInt(currentChoice.id.slice(2));
-                        currentSpellingCombos[0].splice(0, 1);
-                        break;
-
-                    } else {
-                        break;
-                    }
-                }
-            }
-        }
-
-        if (typeof shapesDictionary[currentShape][3] == "string") {
-
-            for (var l = 0; l < thirdString.length; l++) {
-
-                if (thirdString[l].innerHTML == currentSpellingCombos[0][0]) {
-                    currentChoice = thirdString[l];
-
-                    if (determineNextNote(currentChoice, shapesDictionary[currentShape]) == true) {
-                        shapesDictionary[currentShape][3] = parseInt(currentChoice.id.slice(2));
-                        currentSpellingCombos[0].splice(0, 1);
-                        break;
-
-                    } else {
-                        break;
-                    }
-                }
-            }
-        }
-
-        if (typeof shapesDictionary[currentShape][2] == "string") {
-
-            for (var m = 0; m < secondString.length; m++) {
-
-                if (secondString[m].innerHTML == currentSpellingCombos[0][0]) {
-                    currentChoice = secondString[m];
-
-                    if (determineNextNote(currentChoice, shapesDictionary[currentShape]) == true) {
-                        shapesDictionary[currentShape][2] = parseInt(currentChoice.id.slice(2));
-                        currentSpellingCombos[0].splice(0, 1);
-                        break;
-
-                    } else {
-                        break;
-                    }
-                }
-            }
-        }
-
-        if (typeof shapesDictionary[currentShape][1] == "string") {
-
-            for (var n = 0; n < firstString.length; n++) {
-
-                if (firstString[n].innerHTML == currentSpellingCombos[0][0]) {
-                    currentChoice = firstString[n];
-
-                    if (determineNextNote(currentChoice, shapesDictionary[currentShape]) == true) {
-                        shapesDictionary[currentShape][1] = parseInt(currentChoice.id.slice(2));
-                        currentSpellingCombos[0].splice(0, 1);
-                        break;
-
-                    } else {
-                        break;
-                    }
-                }
-            }
-        }
     }
+}
     currentSpellingCombos.splice(0,1);
     return currentShape;
 }
