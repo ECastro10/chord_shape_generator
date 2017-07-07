@@ -136,6 +136,7 @@ function findShape() {
 
     var currentChoice;
     var currentShape = "shape" + String(shapeCounter);
+    var preventInfinity = 0;
 
     if (typeof currentSpellingCombos[0] == "undefined") {
         return false;
@@ -148,58 +149,70 @@ function findShape() {
 
     while (currentSpellingCombos[0].length > 0) {
 
-    for (var i = 6; i > 0; i--) {
+        for (var i = 6; i > 0; i--) {
 
-        if (typeof shapesDictionary[currentShape][i] == "string") {
+            if (typeof shapesDictionary[currentShape][i] == "string") {
 
-            var guitarString;
-            switch (i) {
-                case 6:
-                    guitarString = sixthString;
-                    break;
-                case 5:
-                    guitarString = fifthString;
-                    break;
-                case 4:
-                    guitarString = fourthString;
-                    break;
-                case 3:
-                    guitarString = thirdString;
-                    break;
-                case 2:
-                    guitarString = secondString;
-                    break;
-                case 1:
-                    guitarString = firstString;
-                    break;
-                default:
-                    console.log("Defaulting B****!");
-                    break;
-            }
-
-            for (var j = 0; j < guitarString.length; j++){
-
-                if (guitarString[j].innerHTML == currentSpellingCombos[0][0]){
-
-                    currentChoice = guitarString[j];
-
-                    if (determineNextNote(currentChoice, shapesDictionary[currentShape]) == true) {
-
-                        shapesDictionary[currentShape][i] = parseInt(currentChoice.id.slice(2));
-
-                        currentSpellingCombos[0].splice(0, 1);
+                var guitarString;
+                switch (i) {
+                    case 6:
+                        guitarString = sixthString;
                         break;
-
-                    } else {
+                    case 5:
+                        guitarString = fifthString;
                         break;
+                    case 4:
+                        guitarString = fourthString;
+                        break;
+                    case 3:
+                        guitarString = thirdString;
+                        break;
+                    case 2:
+                        guitarString = secondString;
+                        break;
+                    case 1:
+                        guitarString = firstString;
+                        break;
+                    default:
+                        console.log("Defaulting B****!");
+                        break;
+                }
+
+                if (i == 1){
+                    preventInfinity++;
+                    console.log(preventInfinity);
+
+                } else if (preventInfinity == 5){
+                    currentSpellingCombos.splice(0,1);
+                    shapesDictionary[currentShape] = shapeObject();
+
+                }
+
+                for (var j = 0; j < guitarString.length; j++){
+
+                    if (guitarString[j].innerHTML == currentSpellingCombos[0][0]){
+
+                        currentChoice = guitarString[j];
+
+                        console.log("StringNum= ", i);
+
+                        if (determineNextNote(currentChoice, shapesDictionary[currentShape]) == true) {
+
+                            shapesDictionary[currentShape][i] = parseInt(currentChoice.id.slice(2));
+
+                            currentSpellingCombos[0].splice(0, 1);
+                            break;
+
+                        } else {
+                            break;
+                        }
                     }
+
                 }
 
             }
 
         }
-
-    }
 }
     currentSpellingCombos.splice(0,1);
     return currentShape;
