@@ -146,13 +146,14 @@ function findShape() {
     //This functions job is to regularly update the current shape name, if that current shape
     //does not exist as a key in shapesDictionary, create that object inside of the shapesDictionary
     //and give it some temporary values for shapeRegulator() to evaluate.
-
     var currentChoice;
     var currentShape = "shape" + String(shapeCounter);
     var preventInfinity = 0;
 
+    //These conditional statements make sure that the user cannot find shapes without a root note and a chord quality.
     if (typeof currentSpellingCombos[0] == "undefined") {
         return false;
+
     } else if (typeof (shapesDictionary[currentShape]) == "undefined"){
         shapesDictionary[currentShape] = shapeObject();
     }
@@ -160,6 +161,7 @@ function findShape() {
     //This console.log tells you the length of the keys in an object
     // console.log(Object.keys(shapesDictionary).length);
 
+    masterloop:
     while (currentSpellingCombos[0].length > 0) {
 
         for (var i = 6; i > 0; i--) {
@@ -196,6 +198,14 @@ function findShape() {
 
                 } else if (preventInfinity == 5){
                     currentSpellingCombos.splice(0,1);
+
+                    //This line makes sure that the computer does not try to find a shape for an empty array.
+                    if (currentSpellingCombos.length == 0){
+                        console.log(currentSpellingCombos);
+                        nextButton.hide();
+                        return false;
+                    }
+
                     shapesDictionary[currentShape] = shapeObject();
 
                 }
@@ -219,6 +229,7 @@ function findShape() {
                     }
 
                 }
+
 
             }
 
@@ -248,8 +259,14 @@ function shapeRegulator(){
 
     } else{
         shapeToEvaluate = findShape();
-        
-        if (preventDuplicateShape(shapeToEvaluate) == false) {
+
+        if (shapeToEvaluate == false) {
+            nextButton.hide();
+            delete shapesDictionary["shape" + String(shapeCounter)];
+            shapeCounter--;
+            shapeRegulator();
+
+        } else if (preventDuplicateShape(shapeToEvaluate) == false) {
 
             //Delete the current shapeObject and start anew from the next combo in the array
             delete shapesDictionary[shapeToEvaluate];
