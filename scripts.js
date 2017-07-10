@@ -24,6 +24,8 @@ var currentSpellingCombos;
 var shapeCounter = 0;
 var permutationsDone = false;
 var spellingArray;
+var nextButton = $('#next');
+var prevButton = $('#previous');
 
 var tempArray = [];
 var sixthString = [];
@@ -68,6 +70,17 @@ function createChord() {
     var arrayForConstruction;
     var spelledArray = [];
     var chordFormula;
+
+    if (typeof rootNote == "undefined" || typeof quality == "undefined") {
+        alert("You must choose a Root Note and a Quality.");
+        nextButton.hide();
+        exit();
+    } else if (rootNote == "" || quality == "") {
+        alert("You must choose a Root Note and a Quality.");
+        nextButton.hide();
+        exit();
+    }
+
     for (var startingNote = 0; startingNote < notesArray.length; startingNote++) {
         if (notesArray[startingNote] == rootNote) {
             arrayForConstruction = (notesArray.slice(startingNote).concat(notesArray.slice(0, startingNote + 1)));
@@ -122,8 +135,8 @@ function updateCurrentChoice() {
     quality = $('#quality').val();
     $('#current_choice').html(rootNote + " " + quality);
     resetColors();
-    $('#next').hide();
-    $('#previous').hide();
+    nextButton.hide();
+    prevButton.hide();
     shapesDictionary = {};
     shapeCounter = 0;
     permutationsDone = false;
@@ -180,7 +193,6 @@ function findShape() {
 
                 if (i == 1){
                     preventInfinity++;
-                    console.log(preventInfinity);
 
                 } else if (preventInfinity == 5){
                     currentSpellingCombos.splice(0,1);
@@ -193,8 +205,6 @@ function findShape() {
                     if (guitarString[j].innerHTML == currentSpellingCombos[0][0]){
 
                         currentChoice = guitarString[j];
-
-                        console.log("StringNum= ", i);
 
                         if (determineNextNote(currentChoice, shapesDictionary[currentShape]) == true) {
 
@@ -232,10 +242,6 @@ function shapeRegulator(){
         currentSpellingCombos = permute(spellingArray);
         permutationsDone = true;
     }
-
-    // console.log(shapesDictionary);
-    // console.log("shape Counter ", shapeCounter);
-
 
     if (currentSpellingCombos.length == 0 || typeof shapesDictionary["shape" + String(shapeCounter)] == "object"){
         lightItUp("shape" + String(shapeCounter));
@@ -364,28 +370,28 @@ function permute(permutation) {
   return result;
 }
 
-$('#previous').click(function(){
+prevButton.click(function(){
     shapeCounter--;
     if (shapeCounter == 0) {
-        $('#previous').fadeOut(1);
+        prevButton.fadeOut(1);
     } else if (shapeCounter < Object.keys(shapesDictionary).length){
-        $('#next').fadeIn(1);
+        nextButton.fadeIn(1);
     }
     shapeRegulator();
 });
 
-$('#next').click(function(){
+nextButton.click(function(){
     shapeCounter++;
     if (currentSpellingCombos.length == 1 && shapeCounter == Object.keys(shapesDictionary).length) {
-        $('#next').fadeOut(1);
+        nextButton.fadeOut(1);
     } else if (currentSpellingCombos.length == 0 && shapeCounter == Object.keys(shapesDictionary).length -1) {
-        $('#next').fadeOut(1);
+        nextButton.fadeOut(1);
     } else if (shapeCounter == 1) {
-        $('#previous').fadeIn(1);
+        prevButton.fadeIn(1);
     }
     shapeRegulator();
 });
 
 $('#generate_button').click(function(){
-    $('#next').fadeIn(1);
+    nextButton.fadeIn(1);
 });
